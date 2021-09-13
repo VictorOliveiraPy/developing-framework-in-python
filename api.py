@@ -2,6 +2,16 @@ from webob import Request, Response
 
 
 class API:
+    def __init__(self):
+        self.routes = {}
+
+    def route(self, path):
+        def wrapper(handler):
+            self.routes[path] = handler
+            return handler
+
+        return wrapper()
+
     def __call__(self, environ, start_response):
         request = Request(environ)
 
