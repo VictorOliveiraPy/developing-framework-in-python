@@ -10,7 +10,7 @@ class API:
             self.routes[path] = handler
             return handler
 
-        return wrapper()
+        return wrapper
 
     def __call__(self, environ, start_response):
         request = Request(environ)
@@ -20,9 +20,9 @@ class API:
         return response(environ, start_response)
 
     def handle_request(self, request):
-        user_agent = request.environ.get("HTTP_USER_AGENT", "NO USER AGENT FOUND")
-
         response = Response()
-        response.text = f'Hello, my friend with this user agent: {user_agent}'
 
-        return response
+        for path, handler in self.routes.items():
+            if path == request.path:
+                handler(request, response)
+                return response
